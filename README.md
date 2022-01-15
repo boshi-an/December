@@ -198,6 +198,10 @@ More icons: [https://semantic-ui.com/elements/icon.html](https://semantic-ui.com
 
 Initial version.
 
+## License
+
+MIT License.
+
 ---
 
 ## Something Interesting

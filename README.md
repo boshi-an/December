@@ -76,6 +76,24 @@ To handle static file requests, you still need to set up a static file service (
 
 Open `settings.py` in the `December` folder of the working directory of the blog system, and change `DEBUG = False` to `DEBUG = True`. This will turn on the debug mode of the system. Again, be warned that debug mode may have serious security issues.
 
+## Articles
+
+### Post
+
+This kind of articles will be presented on the homepage and in search results. Their contents are public, unless they are set to be password protected.
+
+If a post is protected, the search engine will skip searching its content (but will still search its title), and the comments belong to it will not be shown as well.
+
+They are open to comments, unless they are set to be not allowed for comments. If a post is not allowed for comments, comments belong to it will be hidden from visitors.
+
+### Page
+
+This kind of articles are similar with "Posts", but they will not be shown on the homepage and search page regardless of whether they are protected.
+
+### Draft
+
+Drafts are only visible to you, including their comments. And they will not be shown on the homepage and search page as well.
+
 ## Avatar
 
 The December blogging system is using [Gravatar](http://gravatar.com/emails/) as its avatar source, including administrator's avatar and avatars in comments.
@@ -152,6 +170,11 @@ Result of this example:
 ![menu_icon_example](images/menu_icon_example.png)
 
 More icons: [https://semantic-ui.com/elements/icon.html](https://semantic-ui.com/elements/icon.html)
+
+## Security Warnings
+
++ Do not share your `config.py` with others! It holds the most important security keys of the system.
++ Please note that the passwords of articles are stored unencrypted in your database. So, please do not use some important passwords for articles, like the password of your bank account.
 
 ## Screenshots
 

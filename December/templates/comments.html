@@ -4,7 +4,7 @@
     <img src="https://www.gravatar.com/avatar/{{ i.email_hash }}">
   </a>
   <div id="comment-{{ i.cid }}" class="content">
-    <a class="author" href="{{ i.url }}">{{ i.author }}</a>
+    <a class="author" {% if i.url|length %}href="{{ i.url }}"{% endif %}>{{ i.author }}</a>
     <div class="metadata">
       <span class="date">{{ i.time }}</span>
     </div>

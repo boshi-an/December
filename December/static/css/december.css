@@ -29,6 +29,10 @@ body, .pusher {
     z-index: 1000;
 }
 
+.post-content img {
+    max-width: 100%;
+}
+
 .post-content blockquote {
     border-left: 4px solid #777777;
     font-size: 16px;

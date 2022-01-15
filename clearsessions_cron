@@ -1,0 +1,1 @@
+0 0 * * 1 root python3 /December/December/manage.py clearsessions

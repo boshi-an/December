@@ -98,10 +98,10 @@ Format:
 
 ```json
 {
-    "key1": Value1,
-    "key2": Value2,
-    "key3": Value3,
-    ...
+    "key1": "Value1",
+    "key2": "Value2",
+    "key3": "Value3",
+    "....": "......"
 }
 ```
 
@@ -166,6 +166,7 @@ More icons: [https://semantic-ui.com/elements/icon.html](https://semantic-ui.com
 ## TODO
 
 + Media Library System
++ Optimize editor style
 + Code structure optimization
 
 ## Release History

@@ -195,7 +195,7 @@ hCaptcha is turned off by default, unless you set this advanced setting.
 }
 ```
 
-*Please replace `your-site-key` and `your-secret-key` to the actual value that provided by hCaptcha.*
+*Please replace `your-site-key` and `your-secret-key` with the actual value that provided by hCaptcha.*
 
 ## Security Warnings
 

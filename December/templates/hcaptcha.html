@@ -1,0 +1,16 @@
+{% if not logged_in and hcaptcha_key|length %}
+<div class="h-captcha" data-callback="hcaptchaSubmitted" data-sitekey="{{ hcaptcha_key }}"></div>
+<script>
+  var hcaptcha_status = false;
+  function hcaptchaSubmitted(token) {
+      hcaptcha_status = true;
+  }
+  $('.h-captcha').closest('form').submit(function(e){
+      if (!hcaptcha_status) {
+          e.preventDefault();
+          $('.h-captcha').transition('shake');
+      }
+  });
+</script>
+<script src="https://js.hcaptcha.com/1/api.js?hl=en" async defer></script>
+{% endif %}

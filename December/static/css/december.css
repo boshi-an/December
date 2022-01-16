@@ -48,8 +48,12 @@ body, .pusher {
     border-radius: 4px;
 }
 
-.post-content  {
+.post-content {
     word-wrap: break-word;
+}
+
+.comment-content .ui.button {
+    margin-bottom: 8px;
 }
 
 .main-avatar:hover {

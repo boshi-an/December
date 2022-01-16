@@ -62,7 +62,7 @@
               <tbody>
                 {% for i in post_list %}
                 <tr>
-                  <td class="collapsing">
+                  <td>
                     <a href="/archives/{{ i.pid }}">{{ i.title }}</a>{%if i.protected %} <i class="lock icon"></i>{% endif %}
                     <a href="/admin/edit/{{ i.pid }}">
                       <i class="pencil alternate icon"></i>

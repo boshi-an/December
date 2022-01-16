@@ -53,14 +53,18 @@ Then, visit `address_of_your_machine:8080`. You should now be able to see the sy
 **Some Tips:**
 
 + If you want to use another port, please replace "8080" in the command with the port number you want to use.
-+ If you want to persist the data (mount the volume), you can use this command instead (assuming that the working directory of the blog system, i.e. the directory where `manage.py` and `db.sqlite3` is located, is `/www-data/December`):
++ If you want to persist the data (mount the volume), you can use this command instead (assuming that the working directory of the blog system, i.e. the directory where your `db.sqlite3` is located, is `/www-data/December`):
 
 ```shell
 docker run --name december-blog --restart unless-stopped \
-        -v /www-data/December:/December/December \
+        -v /www-data/December/db.sqlite3:/December/December/db.sqlite3 \
+        -v /www-data/December/configs:/December/December/configs \
+        -v /www-data/December/media:/December/December/media \
         -p 8080:80 \
         -d trinitrotofu/december
 ```
+
+Note: you only need to mount `db.sqlite3`, `configs` and `media`, since your data is only stored in these three things.
 
 ### Install via Source Code
 
@@ -111,6 +115,8 @@ Advanced settings is a very important and useful feature of the December bloggin
 You can find it in the settings page of the blog.
 
 For this feature, you may need some basic knowledge about JSON.
+
+**Warning: Incorrect advanced settings may cause the website to fail and become inaccessible. Please double check during configuration and use the JSON checker for verification.**
 
 Format:
 
@@ -171,9 +177,29 @@ Result of this example:
 
 More icons: [https://semantic-ui.com/elements/icon.html](https://semantic-ui.com/elements/icon.html)
 
+### hCaptcha
+
+The system natively support [hCaptcha](https://www.hcaptcha.com/), to protect you from spam comments and password cracking.
+
+hCaptcha is turned off by default, unless you set this advanced setting.
+
++ Key: `hcaptcha`
++ Value: a dictionary (object in JSON) that contains 2 keys: `key` and `secret`. The value corresponding to each key is a string.
++ Format: `"hcaptcha": {"key": "your-site-key", "secret": "your-secret-key"}`
++ Example advanced settings:
+
+```json
+"hcaptcha": {
+    "key": "your-site-key",
+    "secret": "your-secret-key"
+}
+```
+
+*Please replace `your-site-key` and `your-secret-key` to the actual value that provided by hCaptcha.*
+
 ## Security Warnings
 
-+ Do not share your `config.py` with others! It holds the most important security keys of the system.
++ Do not share your `configs/keys.py` with others! It holds the most important security keys of the system.
 + Please note that the passwords of articles are stored unencrypted in your database. So, please do not use some important passwords for articles, like the password of your bank account.
 
 ## Screenshots
@@ -193,6 +219,12 @@ More icons: [https://semantic-ui.com/elements/icon.html](https://semantic-ui.com
 + Code structure optimization
 
 ## Release History
+
+### 1.1
+
++ Add hCaptcha support.
++ Move `configs.py`(now `keys.py`) and `is_installed` into the `configs` package.
++ Fine tune the CSS style.
 
 ### 1.0
 

@@ -72,13 +72,14 @@
             <div class="field">
               <label>Please enter your password to view the content.</label>
               <input type="password" name="post-password" placeholder="Password">
+              {% if hcaptcha %}{% include 'hcaptcha.html' %}{% endif %}
             </div>
             <button class="ui button" type="submit">Submit</button>
           </form>
           {% endif %}
         </div>
         {% if visible and post_allow_comment and post_type != "draft" %}
-        <div class="ui raised very padded large segment">
+        <div class="ui raised very padded large segment comment-content">
           <div id="comment-list" class="ui comments">
             <h3 class="ui dividing header">
               {% if post_comments_num == 0 %}
@@ -108,15 +109,6 @@
                   <input id="comment-url" type="url" name="comment-url" placeholder="https://example.com" maxlength="255">
                 </div>
               </div>
-              <script>
-                // Anti comment spam
-                var original_ts = new Date().getTime();
-                $('#reply-form').submit(function(e) {
-                  now_ts = new Date().getTime();
-                  if (now_ts - original_ts < 5000)
-                    e.preventDefault();
-                })
-              </script>
               {% endif %}
               <div class="required field">
                 <label>Comment{% if logged_in %} (replying as {{ username }}){% endif %}</label>
@@ -128,6 +120,7 @@
               <div id="cancel-reply" class="ui red labeled icon button" onclick="DecemberReply('0')" style="display: none;">
                 <i class="close icon"></i> Cancel reply
               </div>
+              {% if hcaptcha %}{% include 'hcaptcha.html' %}{% endif %}
             </form>
           </div>
         </div>

@@ -23,28 +23,22 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 
 try:
-    from . import configs
+    from configs import keys
 except ImportError:
-    config_path = os.path.join(
-                os.path.abspath(os.path.dirname(__file__)), \
-                'configs.py'
-            )
+    config_path = os.path.join(BASE_DIR, 'configs', 'keys.py')
     f = open(config_path, "w")
     f.write('SECRET_KEY = "' + get_random_secret_key() + '"\n' \
             'AUTH_SALT = "' + get_random_secret_key() + '"\n'
             )
     f.close()
-    from . import configs
+    from configs import keys
 
-SECRET_KEY = configs.SECRET_KEY
-AUTH_SALT = configs.AUTH_SALT
-IS_INSTALLED = os.path.exists(os.path.join(
-                os.path.abspath(os.path.dirname(__file__)), \
-                'is_installed'
-            ))
+SECRET_KEY = keys.SECRET_KEY
+AUTH_SALT = keys.AUTH_SALT
+IS_INSTALLED = os.path.exists(os.path.join(BASE_DIR, 'configs', 'is_installed'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 

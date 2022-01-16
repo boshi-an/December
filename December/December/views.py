@@ -11,8 +11,8 @@ from .functions import get_option, set_option, get_navigation_links, \
         get_comments_with_pid, get_pagination, get_recent_comment_list, \
         post_exist, delete_post, comment_exist, get_admin_post_list, \
         get_admin_comment_list, get_admin_pagination, delete_comment, \
-        get_site_icon
-import time, re
+        get_site_icon, get_advanced_option
+import time, re, requests, json
 
 POST_NUM_PER_PAGE = 5
 ADMIN_POST_PER_PAGE = 15
@@ -55,7 +55,20 @@ def login_page(request):
         return redirect("/install")
     if request.session.get("logged_in", False):
         return redirect("/admin")
+    hcaptcha = get_advanced_option("hcaptcha")
     if request.method == "POST":
+        if hcaptcha != None:
+            secret = hcaptcha.get("secret", "")
+            token = request.POST["h-captcha-response"]
+            params = {
+                "secret": secret,
+                "response": token,
+            }
+            response = requests.post("https://hcaptcha.com/siteverify", params)
+            content = json.loads(response.content)
+            if not content["success"]:
+                messages.error(request, "Please complete the captcha.")
+                return redirect(request.path + "#reply-form")
         user = request.POST.get("user", "")
         pswd = request.POST.get("password", "")
         if not auth.auth_user(user, pswd):
@@ -71,7 +84,10 @@ def login_page(request):
         "user": request.COOKIES.get("user", ""),
         "icon_url": get_site_icon(),
         "site_name": get_option("site_name"),
+        "hcaptcha": hcaptcha != None,
     }
+    if context["hcaptcha"]:
+        context["hcaptcha_key"] = hcaptcha.get("key", "")
     return render(request, 'login.html', context)
 
 def logout_page(request):
@@ -138,7 +154,20 @@ def archives_page(request, pid):
     pid = int(pid)
     if not logged_in and data["type"] == "draft":
         raise Http404("Page does not exist")
+    hcaptcha = get_advanced_option("hcaptcha")
     if request.method == "POST":
+        if not logged_in and hcaptcha != None:
+            secret = hcaptcha.get("secret", "")
+            token = request.POST["h-captcha-response"]
+            params = {
+                "secret": secret,
+                "response": token,
+            }
+            response = requests.post("https://hcaptcha.com/siteverify", params)
+            content = json.loads(response.content)
+            if not content["success"]:
+                messages.error(request, "Please complete the captcha.")
+                return redirect(request.path + "#reply-form")
         if request.POST.get("is-password-form", "0") == "1":
             password = request.POST.get("post-password", None)
             if password != data["password"]:
@@ -255,7 +284,10 @@ def archives_page(request, pid):
                 "recent_post_list": get_post_list(0, RECENT_LIST_SIZE)[1],
                 "recent_comment_list": \
                         get_recent_comment_list(RECENT_LIST_SIZE),
+                "hcaptcha": hcaptcha != None,
             }
+            if context["hcaptcha"]:
+                context["hcaptcha_key"] = hcaptcha.get("key", "")
             return render(request, 'archives.html', context)
     post = md2post(data["text"])
     context = {
@@ -274,7 +306,10 @@ def archives_page(request, pid):
         "post_allow_comment": data["allow_comment"],
         "recent_post_list": get_post_list(0, RECENT_LIST_SIZE)[1],
         "recent_comment_list": get_recent_comment_list(RECENT_LIST_SIZE),
+        "hcaptcha": hcaptcha != None,
     }
+    if context["hcaptcha"]:
+        context["hcaptcha_key"] = hcaptcha.get("key", "")
     if data["allow_comment"] and data["type"] != "draft":
         context["comments"] = get_comments_with_pid(pid)
     return render(request, 'archives.html', context)

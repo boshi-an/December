@@ -21,6 +21,10 @@
             </div>
           </div>
           <button class="ui fluid large primary submit button" type="submit">Confirm!</button>
+          {% if hcaptcha %}
+          <div class="ui divider"></div>
+          {% include 'hcaptcha.html' with logged_in=False %}
+          {% endif %}
         </form>
       </div>
       <div class="ui message">

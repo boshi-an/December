@@ -72,7 +72,7 @@
             <div class="field">
               <label>Please enter your password to view the content.</label>
               <input type="password" name="post-password" placeholder="Password">
-              {% if hcaptcha %}{% include 'hcaptcha.html' %}{% endif %}
+              {% include 'hcaptcha.html' %}
             </div>
             <button class="ui button" type="submit">Submit</button>
           </form>
@@ -120,7 +120,7 @@
               <div id="cancel-reply" class="ui red labeled icon button" onclick="DecemberReply('0')" style="display: none;">
                 <i class="close icon"></i> Cancel reply
               </div>
-              {% if hcaptcha %}{% include 'hcaptcha.html' %}{% endif %}
+              {% include 'hcaptcha.html' %}
             </form>
           </div>
         </div>

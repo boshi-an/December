@@ -38,7 +38,7 @@ AUTH_SALT = keys.AUTH_SALT
 IS_INSTALLED = os.path.exists(os.path.join(BASE_DIR, 'configs', 'is_installed'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 

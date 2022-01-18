@@ -98,6 +98,7 @@ def logout_page(request):
     if not request.session.get("logged_in", False):
         return redirect("/")
     request.session["logged_in"] = False
+    request.session.flush()
     return redirect("/")
 
 def index_page(request, num = 1):

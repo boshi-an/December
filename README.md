@@ -18,10 +18,12 @@ Demo: [https://tntofu.com/](https://tntofu.com/)
 + Native support for LaTeX parsing (rendering by [KaTeX](https://katex.org/))
 + Native support for code highlighting (rendering by [PrismJS](https://prismjs.com/))
 + Aesthetically pleasing minimalist and responsive front-end design style (based on [Semantic UI](https://semantic-ui.com/))
++ Acticle rendering and edit system
++ Article comment and reply system
++ Media library system
++ Search system for articles (support article content search), comments and media files
 + Simple and friendly operation logic design
 + Password protection feature for articles
-+ Search system for articles (support article content search) and comments
-+ Article comment and reply system
 + Pinned (top) post feature
 + Flexible and customizable advanced settings (in JSON)
 
@@ -101,12 +103,6 @@ Drafts are only visible to you, including their comments. And they will not be s
 ## Avatar
 
 The December blogging system is using [Gravatar](http://gravatar.com/emails/) as its avatar source, including administrator's avatar and avatars in comments.
-
-## Media Uploading
-
-Unfortunately, the media library system has not been developed yet, so you can only use some external image hosting services right now.
-
-Fortunately, the media library system will appear in the next version soon.
 
 ## Advanced Settings
 
@@ -214,11 +210,18 @@ hCaptcha is turned off by default, unless you set this advanced setting.
 
 ## TODO
 
-+ Media Library System
-+ Optimize editor style
-+ Code structure optimization
++ [x] Media Library System
++ [ ] Optimize editor style
++ [ ] Code structure optimization
++ [ ] More advanced settings
 
 ## Release History
+
+### 1.2
+
++ Implement media library
++ Appearance adjustments
++ The "search icons" in search boxes are used as search buttons
 
 ### 1.1
 

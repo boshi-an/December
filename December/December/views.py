@@ -11,12 +11,14 @@ from .functions import get_option, set_option, get_navigation_links, \
         get_comments_with_pid, get_pagination, get_recent_comment_list, \
         post_exist, delete_post, comment_exist, get_admin_post_list, \
         get_admin_comment_list, get_admin_pagination, delete_comment, \
-        get_site_icon, get_advanced_option
+        get_site_icon, get_advanced_option, get_media_list, save_media, \
+        media_exist, delete_media
 import time, re, requests, json
 
 POST_NUM_PER_PAGE = 5
 ADMIN_POST_PER_PAGE = 15
 ADMIN_COMMENT_PER_PAGE = 10
+ADMIN_MEDIA_PER_PAGE = 3
 RECENT_LIST_SIZE = 10
 
 def install_page(request):
@@ -446,11 +448,11 @@ def admin_page(request):
         return redirect("/login")
     post_page = request.GET.get("post-page", "1")
     if not post_page.isdigit():
-        return redirect("error/404")
+        raise Http404("Page does not exist")
     post_page = int(post_page)
     comment_page = request.GET.get("comment-page", "1")
     if not comment_page.isdigit():
-        return redirect("error/404")
+        raise Http404("Page does not exist")
     comment_page = int(comment_page)
     post_type = request.GET.get("post-type", "")
     post_search = request.GET.get("post-search", "")
@@ -474,7 +476,7 @@ def admin_page(request):
     comment_list = comment_list[1]
     if (len(post_list) == 0 and post_page != 1) or \
             (len(comment_list) == 0 and comment_page != 1):
-        return redirect("error/404")
+        raise Http404("Page does not exist")
     for i in post_list:
         i["type"] = i["type"].capitalize()
         i["time"] = timestamp2str(i["time"])
@@ -575,3 +577,50 @@ def settings_page(request):
         "email": get_option("email"),
     }
     return render(request, 'settings.html', context)
+
+def media_page(request):
+    if not settings.IS_INSTALLED:
+        return redirect("/install")
+    if not request.session.get("logged_in", False):
+        return redirect("/login")
+    if request.method == "POST":
+        file = request.FILES.get("new-file", None)
+        if file == None:
+            raise SuspiciousOperation("Invalid file")
+        save_media(file)
+        messages.success(request, "The file was uploaded successfully.")
+        return redirect("/admin/media")
+    if request.GET.get("action", "") == "delete":
+        mid = int(request.GET.get("mid", "0"))
+        if not media_exist(mid):
+            raise Http404("File does not exist")
+        delete_media(mid)
+        return redirect("/admin/media")
+    page = request.GET.get("page", "1")
+    search = request.GET.get("search", "")
+    if not page.isdigit():
+        raise Http404("Page does not exist")
+    page = int(page)
+    media_list = get_media_list(
+        (page - 1) * ADMIN_MEDIA_PER_PAGE,
+        page * ADMIN_MEDIA_PER_PAGE,
+        search,
+    )
+    media_cnt = media_list[0]
+    media_list = media_list[1]
+    context = {
+        "site_name": get_option("site_name"),
+        "icon_url": get_site_icon(),
+        "page_links": get_admin_navigation_links(),
+        "search": search,
+        "media_list": media_list,
+        "pagination": get_admin_pagination(
+                num = page,
+                page_size = ADMIN_MEDIA_PER_PAGE,
+                post_list_len = media_cnt,
+                key = "page",
+                GET = request.GET,
+                sub = "/media"
+            ),
+    }
+    return render(request, 'media.html', context)

@@ -1,5 +1,6 @@
-from blog.models import Option, Post, Comment
-import markdown, time, hashlib, urllib.parse, json
+from blog.models import Option, Post, Comment, Media
+from . import settings
+import os, markdown, time, hashlib, urllib.parse, json, hashlib
 
 def set_option(name, value):
     try:
@@ -30,6 +31,7 @@ def get_navigation_links():
 def get_admin_navigation_links():
     return [
             ['<i class="list alternate icon"></i>Dashboard', "/admin"],
+            ['<i class="images icon"></i>Media Library', "/admin/media"],
             ['<i class="cog icon"></i>Settings', "/admin/settings"],
             ['<i class="sign out alternate icon"></i>Sign out', "/logout"]
         ]
@@ -389,7 +391,7 @@ def get_admin_comment_list(x, y, search=""):
         })
     return (tmp.count(), res)
 
-def get_admin_pagination(num, page_size, post_list_len, key, GET={}):
+def get_admin_pagination(num, page_size, post_list_len, key, GET={}, sub=""):
     page_cnt = post_list_len
     if page_cnt % page_size > 0:
         page_cnt = page_cnt // page_size + 1
@@ -401,22 +403,65 @@ def get_admin_pagination(num, page_size, post_list_len, key, GET={}):
     res = [(str(num) + " / " + str(page_cnt), "", "", "div")]
     if num > 1:
         get[key] = str(num - 1)
-        url = "/admin?" + urllib.parse.urlencode(get)
+        url = "/admin" + sub + "?" + urllib.parse.urlencode(get)
         res.insert(0, ("<", url, "", "a"))
         get[key] = "1"
-        url = "/admin?" + urllib.parse.urlencode(get)
+        url = "/admin" + sub + "?" + urllib.parse.urlencode(get)
         res.insert(0, ("<<", url, "", "a"))
     else:
         res.insert(0, ("<", "", "disabled", "div"))
         res.insert(0, ("<<", "", "disabled", "div"))
     if num < page_cnt:
         get[key] = str(num + 1)
-        url = "/admin?" + urllib.parse.urlencode(get)
+        url = "/admin" + sub + "?" + urllib.parse.urlencode(get)
         res.append((">", url, "", "a"))
         get[key] = str(page_cnt)
-        url = "/admin?" + urllib.parse.urlencode(get)
+        url = "/admin" + sub + "?" + urllib.parse.urlencode(get)
         res.append((">>", url, "", "a"))
     else:
         res.append((">", "", "disabled", "div"))
         res.append((">>", "", "disabled", "div"))
     return res
+
+def media_exist(mid):
+    return Media.objects.filter(id=mid).count() != 0
+
+def save_media(file):
+    name = file.name
+    upload_time = int(time.time())
+    md5 = hashlib.md5(str(upload_time).encode('utf-8'))
+    md5.update(name.encode('utf-8'))
+    path = md5.hexdigest() + os.path.splitext(name)[1]
+    f = open(os.path.join(settings.BASE_DIR, "media", path), "wb")
+    for chunk in file.chunks():
+        f.write(chunk)
+    f.close()
+    Media(
+        name = name,
+        upload_time = upload_time,
+        path = path,
+    ).save()
+
+def delete_media(mid):
+    obj = Media.objects.get(id = mid)
+    os.remove(os.path.join(settings.BASE_DIR, "media", obj.path))
+    obj.delete()
+
+def get_media_list(x, y, search=""):
+    tmp = Media.objects.all()
+    search_list = search.split()
+    for s in search_list:
+        tmp = tmp.filter(name__icontains = s)
+    x = max(min(x, tmp.count()), 0)
+    y = max(min(y, tmp.count()), 0)
+    res = []
+    while x < y:
+        obj = tmp[x]
+        x += 1
+        res.append({
+            "mid": obj.id,
+            "name": obj.name,
+            "path": obj.path,
+            "time": timestamp2str(obj.upload_time),
+        })
+    return (tmp.count(), res)

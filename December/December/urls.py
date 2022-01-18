@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^page/(?P<num>\d+)$', views.index_page),
     url(r'^admin$', views.admin_page),
     url(r'^admin/settings$', views.settings_page),
+    url(r'^admin/media$', views.media_page),
     url(r'^admin/edit$', views.edit_page),
     url(r'^admin/edit/(?P<pid>\d+)$', views.edit_page),
     url(r'^admin/edit-comment/(?P<cid>\d+)$', views.edit_comment_page),

@@ -5,8 +5,13 @@
         .transition('fade');
     });
     $('.ui.selection.dropdown').css("min-width", "0");
+    $('.search-btn').on('click', function() {
+      $(this)
+        .closest('form')
+        .submit();
+    });
   </script>
-  {% if page_type == 'index' or page_type == 'archives' or page_type == 'edit' or page_type == 'admin' or page_type == 'settings' %}
+  {% if page_type == 'index' or page_type == 'archives' or page_type == 'edit' or page_type == 'admin' or page_type == 'settings' or page_type == 'media' %}
   <script>
     $('.top.fixed.borderless.menu .toc.right.item').on('click', function() {
       $('.ui.sidebar')

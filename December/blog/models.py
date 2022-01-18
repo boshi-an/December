@@ -25,3 +25,8 @@ class Comment(models.Model):
     parent = models.PositiveIntegerField(default=0)
     status = models.CharField(max_length=16, default="published")
     comment_time = models.PositiveIntegerField(default=0)
+
+class Media(models.Model):
+    name = models.CharField(max_length=200, default="")
+    upload_time = models.PositiveIntegerField(default=0)
+    path = models.CharField(max_length=200, default="")

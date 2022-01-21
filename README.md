@@ -10,7 +10,7 @@ December is a minimalist personal blogging system that natively supports Markdow
 
 This project is based on Python(Django), HTML, SQLite and JavaScript(jQuery).
 
-Demo: [https://tntofu.com/](https://tntofu.com/)
+Demo: [https://tofu.icu/](https://tofu.icu/)
 
 ### Main Features
 

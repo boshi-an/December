@@ -14,7 +14,7 @@
     <div class="text">{{ i.text|linebreaks }}</div>
     <div class="actions">
       <a class="reply" onclick="DecemberReply('{{ i.cid }}')"><i class="reply icon"></i>Reply</a>
-      <a href="/admin/edit-comment/{{ i.cid }}"><i class="pencil icon"></i>Edit</a>
+      {% if logged_in %}<a href="/admin/edit-comment/{{ i.cid }}"><i class="pencil icon"></i>Edit</a>{% endif %}
     </div>
   </div>
   {% if i.children|length %}

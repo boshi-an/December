@@ -207,9 +207,14 @@ def comment_exist(cid):
 
 def get_comment_data(cid):
     obj = Comment.objects.get(id=cid)
+    author = obj.author
+    email = obj.email
+    if obj.is_admin:
+        author = get_option("username")
+        email = get_option("email")
     return {
-        "author": obj.author,
-        "email": obj.email,
+        "author": author,
+        "email": email,
         "is_admin": obj.is_admin,
         "url": obj.url,
         "text": obj.text,
@@ -225,8 +230,12 @@ def save_comment(cid, data):
         obj = Comment()
     else:
         obj = Comment.objects.get(id=cid)
-    obj.author = data["author"]
-    obj.email = data["email"]
+    if not data["is_admin"]:
+        obj.author = data["author"]
+        obj.email = data["email"]
+    else:
+        obj.author = ""
+        obj.email = ""
     obj.is_admin = data["is_admin"]
     obj.url = data["url"]
     obj.text = data["text"]
@@ -452,6 +461,7 @@ def get_media_list(x, y, search=""):
     search_list = search.split()
     for s in search_list:
         tmp = tmp.filter(name__icontains = s)
+    tmp = tmp.order_by("-upload_time")
     x = max(min(x, tmp.count()), 0)
     y = max(min(y, tmp.count()), 0)
     res = []

@@ -91,7 +91,7 @@
               {{ post_comments_num }} Comment{% if post_comments_num > 1 %}s{% endif %}
               {% endif %}
             </h3>
-            {% include "comments.html" with comments=comments %}
+            {% include "comments.html" %}
             {% include 'messages.html' %}
             <form id="reply-form" class="ui reply form" method="post">{% csrf_token %}
               <input id="comment-parent" type="hidden" name="comment-parent" value="0">

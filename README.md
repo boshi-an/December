@@ -26,6 +26,8 @@ Demo: [https://tofu.icu/](https://tofu.icu/)
 + Password protection feature for articles
 + Pinned (top) post feature
 + Flexible and customizable advanced settings (in JSON)
++ SMTP mail notification system
++ Support for hCaptcha captcha, anti-spam comments and anti-brute-force password cracking
 
 ## Installation
 
@@ -193,6 +195,37 @@ hCaptcha is turned off by default, unless you set this advanced setting.
 
 *Please replace `your-site-key` and `your-secret-key` with the actual value that provided by hCaptcha.*
 
+### SMTP
+
+You may need to use the SMTP service to send notifications to yourself or to other users, for example when someone comments on your post, or when a comment receives a reply.
+
++ Key: `smtp`
++ Value: a dictionary (object in JSON) that contains several settings. This will be described in detail later.
++ Format: `"hcaptcha": {"key1": "...", "key2": "..."}`
++ Settings:
+  + `host`: A string, represents the host address of the SMTP server.
+  + `port`: An integer, represents the port number of the SMTP server.
+  + `user`: A string, represents your username, or your email address.
+  + `password`: A string, represents your password.
+  + `use_tls`: A boolean value (`true`/`false`), represents whether the SMTP server requires using TLS. Default value: `false` (disabled).
+  + `use_ssl`: A boolean value (`true`/`false`), represents whether the SMTP server requires using SSL. Default value: `false` (disabled).
+  + `send_when_comment`: A boolean value (`true`/`false`), represents whether an email is sent to inform you when someone comments on your article. Default value: `true` (enabled).
+  + `send_when_reply`: A boolean value (`true`/`false`), represents whether to send an email to inform the comment's author when a reply is received to the comment. Default value: `true` (enabled).
++ Example advanced settings:
+
+```json
+"smtp": {
+    "host": "smtp.google.com",
+    "port": 465,
+    "user": "your_gmail_name@gmail.com",
+    "password": "your_password",
+    "use_ssl": true,
+    "send_when_reply": false
+}
+```
+
+*Please note that due to Gmail's security policy, it is likely that you will not be able to use your Gmail password directly as your SMTP credentials. Instead, you will need to use an application-specific password.*
+
 ## Security Warnings
 
 + Do not share your `configs/keys.py` with others! It holds the most important security keys of the system.
@@ -216,6 +249,11 @@ hCaptcha is turned off by default, unless you set this advanced setting.
 + [ ] More advanced settings
 
 ## Release History
+
+### 1.3
+
++ Implement SMTP mail notification system
++ Fix several bugs
 
 ### 1.2
 

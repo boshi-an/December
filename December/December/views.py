@@ -1,9 +1,8 @@
-from django.shortcuts import render
-from django.shortcuts import redirect
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
 from django.core.exceptions import SuspiciousOperation
-from . import installer, settings, auth
+from . import installer, settings, auth, smtp
 from .functions import get_option, set_option, get_navigation_links, \
         get_admin_navigation_links, save_post, get_post_data, \
         md2post, timestamp2str, get_post_list, get_abstract, \
@@ -18,7 +17,7 @@ import time, re, requests, json
 POST_NUM_PER_PAGE = 5
 ADMIN_POST_PER_PAGE = 15
 ADMIN_COMMENT_PER_PAGE = 10
-ADMIN_MEDIA_PER_PAGE = 3
+ADMIN_MEDIA_PER_PAGE = 15
 RECENT_LIST_SIZE = 10
 
 def install_page(request):
@@ -70,7 +69,9 @@ def login_page(request):
             content = json.loads(response.content)
             if not content["success"]:
                 messages.error(request, "Please complete the captcha.")
-                return redirect(request.path + "#reply-form")
+                rep = redirect("/login")
+                rep.set_cookie("user", user)
+                return rep
         user = request.POST.get("user", "")
         pswd = request.POST.get("password", "")
         if not auth.auth_user(user, pswd):
@@ -159,6 +160,7 @@ def archives_page(request, pid):
         raise Http404("Page does not exist")
     hcaptcha = get_advanced_option("hcaptcha")
     if request.method == "POST":
+        page_url = request.build_absolute_uri("/archives/" + str(pid))
         if not logged_in and hcaptcha != None:
             secret = hcaptcha.get("secret", "")
             token = request.POST["h-captcha-response"]
@@ -170,37 +172,43 @@ def archives_page(request, pid):
             content = json.loads(response.content)
             if not content["success"]:
                 messages.error(request, "Please complete the captcha.")
-                return redirect(request.path + "#reply-form")
+                return redirect(page_url + "#reply-form")
         if request.POST.get("is-password-form", "0") == "1":
             password = request.POST.get("post-password", None)
             if password != data["password"]:
                 messages.error(request, "The password is incorrect.")
-                return redirect(request.path)
+                return redirect(page_url)
             request.session["post_pswd_of_" + str(pid)] = password
-            return redirect(request.path)
+            return redirect(page_url)
         if data["type"] == "draft" or not data["allow_comment"]:
             raise SuspiciousOperation("Invalid comment")
         parent = request.POST.get("comment-parent", "0")
         if not parent.isdigit():
             messages.error(request, "Invalid parent comment id")
-            return redirect(request.path + "#reply-form")
+            return redirect(page_url + "#reply-form")
         parent = int(parent)
         if parent != 0:
-            if not comment_exist(parent) or \
-                    get_comment_data(parent)["pid"] != pid:
+            if comment_exist(parent):
+                data = get_comment_data(parent)
+            else:
+                data = {
+                    "pid": 0,
+                    "status": "pending",
+                }
+            if data["pid"] != pid or data["status"] != "published":
                 messages.error(request, "Invalid parent comment id")
-                return redirect(request.path + "#reply-form")
+                return redirect(page_url + "#reply-form")
         if request.POST.get("comment-logged-in", "0") == "1":
             if not logged_in:
                 messages.error(
                     request,
                     "The session has timed out, please log in again"
                 )
-                return redirect(request.path + "#reply-form")
+                return redirect(page_url + "#reply-form")
             content = request.POST.get("comment-content", "")
             if content == "":
                 messages.error(request, "Comment content cannot be empty")
-                return redirect(request.path + "#reply-form")
+                return redirect(page_url + "#reply-form")
             cid = save_comment(
                 cid = 0,
                 data = {
@@ -215,7 +223,16 @@ def archives_page(request, pid):
                     "time": int(time.time()),
                 }
             )
-            return redirect(request.path + "#comment-" + str(cid))
+            comment_url = page_url + "#comment-" + str(cid)
+            if parent != 0 and smtp.send_when_reply():
+                data = get_comment_data(parent)
+                if not data["is_admin"]:
+                    smtp.send_reply_notification(
+                        data["author"],
+                        data["email"],
+                        comment_url
+                    )
+            return redirect(comment_url)
         author = request.POST.get("comment-name", "").strip()
         email = request.POST.get("comment-email", "").strip()
         url = request.POST.get("comment-url", "").strip()
@@ -256,7 +273,7 @@ def archives_page(request, pid):
             messages.error(request, "Comment content cannot be empty")
             flag = True
         if flag:
-            return redirect(request.path + "#reply-form")
+            return redirect(page_url + "#reply-form")
         cid = save_comment(
             cid = 0,
             data = {
@@ -271,7 +288,19 @@ def archives_page(request, pid):
                 "time": int(time.time()),
             }
         )
-        return redirect(request.path + "#comment-" + str(cid))
+        comment_url = page_url + "#comment-" + str(cid)
+        if parent == 0:
+            if smtp.send_when_comment():
+                smtp.send_comment_notification(data["title"], comment_url)
+        else:
+            if smtp.send_when_reply():
+                data = get_comment_data(parent)
+                smtp.send_reply_notification(
+                    data["author"],
+                    data["email"],
+                    comment_url
+                )
+        return redirect(comment_url)
     if data["protected"] and not logged_in:
         if request.session.get("post_pswd_of_" + str(pid), None) \
                 != data["password"]:
@@ -420,19 +449,14 @@ def edit_comment_page(request, cid = 0):
         delete_comment(cid)
         messages.success(request, "Comment deleted successfully.")
         return redirect("/admin")
-    comment_author = data["author"]
-    comment_email = data["email"]
-    if data["is_admin"]:
-        comment_author = get_option("username")
-        comment_email = get_option("email")
     context = {
         "cid": cid,
-        "page_title": "Editing " + comment_author + "'s comment",
+        "page_title": "Editing " + data["author"] + "'s comment",
         "icon_url": get_site_icon(),
         "site_name": get_option("site_name"),
         "page_links": get_admin_navigation_links(),
-        "comment_author": comment_author,
-        "comment_email": comment_email,
+        "comment_author": data["author"],
+        "comment_email": data["email"],
         "comment_content": data["text"],
         "comment_pid": data["pid"],
         "comment_time": data["time"],

@@ -65,8 +65,8 @@
               <i class="comment icon"></i> {{ post_comments_num }} comment{% if post_comments_num > 1 %}s{% endif %}
             </div>
           </div>
-          {% endif %}
           <div class="ui hidden divider"></div>
+          {% endif %}
           {% if visible %}
           {{ post_content|safe }}
           {% else %}

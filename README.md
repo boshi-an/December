@@ -84,6 +84,18 @@ To handle static file requests, you still need to set up a static file service (
 
 Open `settings.py` in the `December` folder of the working directory of the blog system, and change `DEBUG = False` to `DEBUG = True`. This will turn on the debug mode of the system. Again, be warned that debug mode may have serious security issues.
 
+## Writing Articles
+
+You can use various Markdown and LaTeX syntaxes to achieve all kinds of beautiful effects.
+
+The system's Markdown rendering supports the display of HTML tags.
+
+### Abstract Divider
+
+Use `<!--more-->` as abstract divider.
+
+When an article is displayed on the home page, the content behind the abstract divider will be hidden.
+
 ## Articles
 
 ### Post
@@ -249,6 +261,11 @@ You may need to use the SMTP service to send notifications to yourself or to oth
 + [ ] More advanced settings
 
 ## Release History
+
+### 1.3.1
+
++ Add media library file type restrictions
++ Fix excessive line spacing between header and content
 
 ### 1.3
 

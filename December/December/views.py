@@ -12,13 +12,22 @@ from .functions import get_option, set_option, get_navigation_links, \
         get_admin_comment_list, get_admin_pagination, delete_comment, \
         get_site_icon, get_advanced_option, get_media_list, save_media, \
         media_exist, delete_media
-import time, re, requests, json
+import time, re, requests, json, mimetypes
 
 POST_NUM_PER_PAGE = 5
 ADMIN_POST_PER_PAGE = 15
 ADMIN_COMMENT_PER_PAGE = 10
 ADMIN_MEDIA_PER_PAGE = 15
 RECENT_LIST_SIZE = 10
+ALLOWED_MEDIA_TYPE_PREFIX = (
+    "video/",
+    "image/",
+    "audio/",
+    "application/zip",
+    "application/rar",
+    "application/x-7z-compressed",
+    "application/pdf"
+)
 
 def install_page(request):
     if settings.IS_INSTALLED:
@@ -612,8 +621,13 @@ def media_page(request):
         file = request.FILES.get("new-file", None)
         if file == None:
             raise SuspiciousOperation("Invalid file")
-        save_media(file)
-        messages.success(request, "The file was uploaded successfully.")
+        file_type = str(mimetypes.guess_type(file.name)[0])
+        for prefix in ALLOWED_MEDIA_TYPE_PREFIX:
+            if file_type.startswith(prefix):
+                save_media(file)
+                messages.success(request, "The file was uploaded successfully.")
+                return redirect("/admin/media")
+        messages.error(request, "Unsupported file type.")
         return redirect("/admin/media")
     if request.GET.get("action", "") == "delete":
         mid = int(request.GET.get("mid", "0"))

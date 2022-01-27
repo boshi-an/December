@@ -83,11 +83,11 @@ def install(request):
     set_option("password", password_hash(data["password"]))
     set_option("email", data["email"])
     set_option("advanced_settings", "{}")
-    config_path = os.path.exists(os.path.join(
+    config_path = os.path.join(
             settings.BASE_DIR,
             'configs',
             'is_installed'
-            ))
+        )
     open(config_path, "w").close()
     settings.IS_INSTALLED = True
     pid = save_post(

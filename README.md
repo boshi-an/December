@@ -253,14 +253,21 @@ You may need to use the SMTP service to send notifications to yourself or to oth
 
 ![screenshot_admin](images/screenshot_admin.png)
 
+![screenshot_media](images/screenshot_media.png)
+
 ## TODO
 
 + [x] Media Library System
-+ [ ] Optimize editor style
++ [x] Optimize editor style
 + [ ] Code structure optimization
 + [ ] More advanced settings
 
 ## Release History
+
+### 1.4
+
++ Optimize editor style using [CodeMirror](https://codemirror.net/)
++ Fix several bugs
 
 ### 1.3.1
 

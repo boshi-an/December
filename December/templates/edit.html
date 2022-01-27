@@ -40,7 +40,7 @@
               <input type="text" name="post-title" placeholder="Title" value="{{ post_title }}" autocomplete="off">
             </div>
             <div class="field">
-              <textarea name="post-content" rows="16" placeholder="Please use Markdown here...">{{ post_content }}</textarea>
+              <textarea id="editor" name="post-content" placeholder="Please use Markdown here...">{{ post_content }}</textarea>
             </div>
             <button id="save-btn" class="ui primary labeled submit icon button" type="submit">
               <i class="save icon"></i> Save
@@ -149,12 +149,23 @@
       })
       .dropdown('set selected', '{{ post_type }}');
     $('.ui.checkbox').checkbox();
+    var cm_editor = CodeMirror.fromTextArea(
+      document.getElementById("editor"),
+      {
+        mode: "markdown",
+        lineWrapping: true,
+        tabSize: 2,
+      }
+    );
+    cm_editor.setSize(null, 350);
     var form_original_serial = $("#edit-form").serialize();
     $(window).on('beforeunload', function() {
+      cm_editor.save();
       if ($("#edit-form").serialize() != form_original_serial)
         return 'Are you sure you want to leave without saving? This will cause changes to be lost.';
     });
     $('#save-btn').click(function() {
+      cm_editor.save();
       form_original_serial = $("#edit-form").serialize();
     });
   </script>

@@ -37,5 +37,14 @@
     }
   </script>
   {% endif %}
+  {% if page_type == 'edit' or page_type == 'settings' %}
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.1/lib/codemirror.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.1/lib/codemirror.css">
+  {% if page_type == 'edit' %}
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.1/mode/markdown/markdown.js"></script>
+  {% else %}
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.1/mode/javascript/javascript.js"></script>
+  {% endif %}
+  {% endif %}
 </head>
 <body>

@@ -38,7 +38,7 @@
             </div>
             <div class="field">
               <label>Advanced Settings (json)</label>
-              <textarea name="advanced-settings" rows="10" placeholder="Please use json here...">{{ advanced_settings }}</textarea>
+              <textarea id="advanced-editor" name="advanced-settings">{{ advanced_settings }}</textarea>
             </div>
             <div class="ui divider"></div>
             <div class="required field">
@@ -94,5 +94,17 @@
         ]
       })
       .dropdown('set selected', '{{ post_type }}');
+    var cm_editor = CodeMirror.fromTextArea(
+      document.getElementById("advanced-editor"),
+      {
+        mode: {
+          name: "javascript",
+          json: true,
+          statementIndent: 2,
+        },
+        lineWrapping: true,
+        tabSize: 2,
+      }
+    );
   </script>
 {% include "footer.html" with page_type='settings' %}

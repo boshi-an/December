@@ -59,3 +59,16 @@ body, .pusher {
 .main-avatar {
     transition: all 1.0s;
 }
+
+.ui.form .CodeMirror {
+    border-radius: .28571429rem;
+    border: 1px solid rgba(34,36,38,.15);
+}
+
+.ui.form .CodeMirror-scroll {
+    padding: .78571429em 1em;
+}
+
+.ui.form .CodeMirror-focused {
+    border: 1px solid #85b7d9;
+}

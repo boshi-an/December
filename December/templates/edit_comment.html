@@ -1,4 +1,4 @@
-{% include "header.html" with title=page_title|add:' - '|add:site_name page_type='edit' %}
+{% include "header.html" with title=page_title|add:' - '|add:site_name page_type='edit_comment' %}
   <div class="ui right sidebar vertical menu">
     <a class="header item" href="/">{{ site_name }}</a>
     {% for i in page_links %}
@@ -133,4 +133,4 @@
       form_original_serial = $("#edit-form").serialize();
     });
   </script>
-{% include "footer.html" with page_type='edit' %}
+{% include "footer.html" with page_type='edit_comment' %}

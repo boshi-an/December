@@ -132,10 +132,10 @@ Format:
 
 ```json
 {
-    "key1": "Value1",
-    "key2": "Value2",
-    "key3": "Value3",
-    "....": "......"
+  "key1": "Value1",
+  "key2": "Value2",
+  "key3": "Value3",
+  "....": "......"
 }
 ```
 
@@ -148,7 +148,7 @@ Format:
 
 ```json
 {
-    "icon": "/static/img/icon_m.png"
+  "icon": "/static/img/icon_m.png"
 }
 ```
 
@@ -161,10 +161,10 @@ Format:
 
 ```json
 {
-    "menu": [
-        ["Index", "/"],
-        ["Github", "https://github.com/"]
-    ]
+  "menu": [
+    ["Index", "/"],
+    ["Github", "https://github.com/"]
+  ]
 }
 ```
 
@@ -174,10 +174,10 @@ For example, the HTML code of "house" icon is `<i class="home icon"></i>`, and t
 
 ```json
 {
-    "menu": [
-        ["<i class=\"home icon\"></i>Index", "/"],
-        ["<i class=\"github icon\"></i>Github", "https://github.com/"]
-    ]
+  "menu": [
+    ["<i class=\"home icon\"></i>Index", "/"],
+    ["<i class=\"github icon\"></i>Github", "https://github.com/"]
+  ]
 }
 ```
 
@@ -200,8 +200,8 @@ hCaptcha is turned off by default, unless you set this advanced setting.
 
 ```json
 "hcaptcha": {
-    "key": "your-site-key",
-    "secret": "your-secret-key"
+  "key": "your-site-key",
+  "secret": "your-secret-key"
 }
 ```
 
@@ -227,12 +227,12 @@ You may need to use the SMTP service to send notifications to yourself or to oth
 
 ```json
 "smtp": {
-    "host": "smtp.google.com",
-    "port": 465,
-    "user": "your_gmail_name@gmail.com",
-    "password": "your_password",
-    "use_ssl": true,
-    "send_when_reply": false
+  "host": "smtp.google.com",
+  "port": 465,
+  "user": "your_gmail_name@gmail.com",
+  "password": "your_password",
+  "use_ssl": true,
+  "send_when_reply": false
 }
 ```
 

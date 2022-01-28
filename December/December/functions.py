@@ -30,7 +30,7 @@ def get_navigation_links():
 
 def get_admin_navigation_links():
     return [
-            ['<i class="list alternate icon"></i>Dashboard', "/admin"],
+            ['<i class="tachometer alternate icon"></i>Dashboard', "/admin"],
             ['<i class="images icon"></i>Media Library', "/admin/media"],
             ['<i class="cog icon"></i>Settings', "/admin/settings"],
             ['<i class="sign out alternate icon"></i>Sign out', "/logout"]

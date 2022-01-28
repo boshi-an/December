@@ -255,6 +255,8 @@ You may need to use the SMTP service to send notifications to yourself or to oth
 
 ![screenshot_media](images/screenshot_media.png)
 
+![screenshot_media](images/screenshot_settings.png)
+
 ## TODO
 
 + [x] Media Library System
@@ -263,6 +265,13 @@ You may need to use the SMTP service to send notifications to yourself or to oth
 + [ ] More advanced settings
 
 ## Release History
+
+### 1.4.2
+
++ Fix message displaying bug for protected articles
++ Modify some icons' display
++ CSS adjustments
++ Fix small bugs
 
 ### 1.4.1
 

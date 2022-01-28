@@ -6,7 +6,7 @@
     {% endfor %}
     {% if logged_in %}
     <a class="item" href="/admin">
-      <i class="list alternate icon"></i>Dashboard
+      <i class="tachometer alternate icon"></i>Dashboard
     </a>
     {% else %}
     <a class="item" href="/login">
@@ -27,7 +27,7 @@
           {% endfor %}
           {% if logged_in %}
           <a class="item" href="/admin">
-            <i class="list alternate icon"></i>Dashboard
+            <i class="tachometer alternate icon"></i>Dashboard
           </a>
           {% else %}
           <a class="item" href="/login">
@@ -64,7 +64,7 @@
               <i class="calendar icon"></i> {{ post_time }}
             </div>
             <div class="ui label">
-              <i class="comment icon"></i> {{ post_comments_num }} comment{% if post_comments_num > 1 %}s{% endif %}
+              <i class="comments icon"></i> {{ post_comments_num }} comment{% if post_comments_num > 1 %}s{% endif %}
             </div>
           </div>
           <div class="ui hidden divider"></div>
@@ -72,6 +72,7 @@
           {% if visible %}
           {{ post_content|safe }}
           {% else %}
+          {% include 'messages.html' %}
           <form class="ui form" method="post">{% csrf_token %}
             <input type="hidden" name="is-password-form" value="1">
             <div class="field">

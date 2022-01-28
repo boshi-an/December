@@ -88,7 +88,7 @@
         </div>
         <div class="six wide column">
           <div class="ui raised very padded large segment">
-            <h1 class="ui dividing header">{{ comment_cnt }} Comment{% if post_cnt > 1 %}s{% endif %}</h1>
+            <h1 class="ui dividing header">{{ comment_cnt }} Comment{% if comment_cnt > 1 %}s{% endif %}</h1>
             <div class="field">
               <label>Key words</label>
               <div class="ui icon input">
@@ -111,7 +111,7 @@
                   <div class="text">{{ i.text|linebreaks }}</div>
                   <div class="actions">
                     <a href="/archives/{{ i.pid }}#comment-{{ i.cid }}">
-                      <i class="linkify icon"></i>
+                      <i class="external alternate icon"></i>
                       View
                     </a>
                     <a href="/admin/edit-comment/{{ i.cid }}">

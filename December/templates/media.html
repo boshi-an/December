@@ -60,7 +60,7 @@
             <tbody>
               {% for i in media_list %}
               <tr>
-                <td>
+                <td style="word-break: break-all;">
                   <a href="/media/{{ i.path }}" target="_blank">{{ i.name }}</a>
                 </td>
                 <td>{{ i.time }}</td>
@@ -85,30 +85,35 @@
       </div>
     </div>
   </div>
-  <div class="ui tiny modal">
-    <i class="close icon"></i>
-    <div class="header">
-      Warning
+  <div id="delete-modal" class="ui basic tiny modal">
+    <div class="ui header">
+      Warning!
     </div>
     <div class="content">
-        <p>Are you sure you want to delete this file?</p>
-        <p>This action cannot be undone!</p>
+      <p>Are you sure you want to delete this file?</p>
+      <p>This action cannot be undone!</p>
     </div>
     <div class="actions">
-      <div id="modal-cancel" class="ui button">Cancel</div>
-      <div id="modal-confirm" class="ui red button">Delete</div>
+      <div class="ui basic cancel inverted button">
+        <i class="remove icon"></i>
+        Cancel
+      </div>
+      <div class="ui red confirm inverted button">
+        <i class="trash icon"></i>
+        Delete
+      </div>
     </div>
   </div>
   <script>
     var delete_mid = 0;
     $('.delete-btn').click(function() {
       delete_mid = $(this).attr("data-media-id");
-      $('.ui.modal').modal('show');
+      $('#delete-modal').modal('show');
     });
-    $('#modal-cancel').click(function() {
-      $('.ui.modal').modal('hide');
+    $('#delete-modal .cancel').click(function() {
+      $('#delete-modal').modal('hide');
     });
-    $('#modal-confirm').click(function() {
+    $('#delete-modal .confirm').click(function() {
       window.location.href = "/admin/media?action=delete&mid=" + delete_mid;
     });
   </script>

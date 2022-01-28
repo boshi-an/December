@@ -634,6 +634,7 @@ def media_page(request):
         if not media_exist(mid):
             raise Http404("File does not exist")
         delete_media(mid)
+        messages.success(request, "The file was deleted successfully.")
         return redirect("/admin/media")
     page = request.GET.get("page", "1")
     search = request.GET.get("search", "")

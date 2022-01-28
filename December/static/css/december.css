@@ -6,7 +6,7 @@ body, .pusher {
     display: none;
 }
 
-@media only screen and (max-width: 723px) {
+@media only screen and (max-width: 768px) {
     .top.fixed.borderless.menu .toc.right.item {
         display: flex;
     }

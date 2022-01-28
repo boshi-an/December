@@ -60,19 +60,22 @@
                   <th>Title</th>
                   <th>Type</th>
                   <th>Time</th>
+                  <th>Edit</th>
                 </tr>
               </thead>
               <tbody>
                 {% for i in post_list %}
                 <tr>
-                  <td>
+                  <td style="word-break: break-all;">
                     <a href="/archives/{{ i.pid }}">{{ i.title }}</a>{%if i.protected %} <i class="lock icon"></i>{% endif %}
+                  </td>
+                  <td>{{ i.type }}</td>
+                  <td>{{ i.time }}</td>
+                  <td class="collapsing center aligned">
                     <a href="/admin/edit/{{ i.pid }}">
                       <i class="pencil alternate icon"></i>
                     </a>
                   </td>
-                  <td>{{ i.type }}</td>
-                  <td>{{ i.time }}</td>
                 </tr>
                 {% endfor %}
               </tbody>

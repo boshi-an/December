@@ -264,6 +264,11 @@ You may need to use the SMTP service to send notifications to yourself or to oth
 
 ## Release History
 
+### 1.4.1
+
++ Optimise navigation bar and search box display
++ Optimise some of the appearances and effects
+
 ### 1.4
 
 + Optimize editor style using [CodeMirror](https://codemirror.net/)

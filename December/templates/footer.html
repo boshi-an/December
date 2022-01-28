@@ -21,7 +21,30 @@
   </script>
   {% endif %}
   {% if page_type == 'index' or page_type == 'archives' %}
+  <div id="search-modal" class="ui mini modal">
+    <i class="close icon"></i>
+    <div class="header">
+      Search...
+    </div>
+    <div class="content">
+      <form class="ui form" action="/" method="get">
+        <div class="field">
+          <div class="ui action input">
+            <input type="text" name="s" value="{{ search_value }}">
+            <button class="ui primary icon button">
+              <i class="search icon"></i>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
   <script>
+    $('.ui.menu .item.search').click(function() {
+      $('#search-modal')
+        .modal('setting', 'closable', false)
+        .modal('show');
+    });
     $('pre').addClass("line-numbers");
     $('.post-content img').addClass("ui rounded image");
     $('.post-content table').addClass("ui celled unstackable table");
